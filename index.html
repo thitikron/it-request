@@ -421,7 +421,7 @@
 
 
 <!-- ===== LOGIN OVERLAY ===== -->
-<div class="login-overlay" id="login-overlay">
+<div class="login-overlay" id="login-overlay" style="display:none">
   <div class="login-box">
     <div class="login-logo">🔐</div>
     <div class="login-title">IT Admin เข้าสู่ระบบ</div>
@@ -436,6 +436,7 @@
     </div>
     <button class="login-btn" onclick="doLogin()">🔑 เข้าสู่ระบบ</button>
     <div class="login-err" id="login-err">❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</div>
+    <button onclick="closeLogin()" style="margin-top:16px;width:100%;padding:11px;border-radius:10px;border:2px solid #e2e8f0;background:white;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:600;color:#475569;cursor:pointer;">← กลับหน้าแรก</button>
   </div>
 </div>
 
@@ -484,6 +485,13 @@ const IT_ACCOUNTS = [
 let currentITUser = null; // เก็บ session ใน memory
 
 
+function closeLogin() {
+  document.getElementById('login-overlay').style.display = 'none';
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+  document.getElementById('login-err').classList.remove('show');
+}
+
 function goHome() {
   document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
@@ -503,6 +511,12 @@ function doLogin() {
     document.getElementById('it-user-badge').style.display = 'inline-block';
     document.getElementById('logout-btn').style.display = 'inline-block';
     document.getElementById('login-err').classList.remove('show');
+    // ไปหน้า Admin
+    document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('view-admin').classList.add('active');
+    document.querySelectorAll('.nav-btn')[2].classList.add('active');
+    if (!IS_CONFIGURED) document.getElementById('setup-banner').style.display = 'block';
     loadAllTickets();
   } else {
     document.getElementById('login-err').classList.add('show');
@@ -555,8 +569,8 @@ function showView(v, btn) {
   // ถ้าจะเข้า Admin ต้อง Login ก่อน
   if (v === 'admin' && !currentITUser) {
     document.getElementById('login-overlay').style.display = 'flex';
-    document.getElementById('login-user').focus();
-    return;
+    setTimeout(() => document.getElementById('login-user').focus(), 100);
+    return; // ค้างอยู่หน้าปัจจุบัน ไม่เปลี่ยน view
   }
   document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
