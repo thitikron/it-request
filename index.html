@@ -217,8 +217,8 @@
 <!-- HEADER -->
 <div class="header">
   <div class="header-inner">
-    <div class="logo-box">🏥</div>
-    <div class="logo-text">
+    <div class="logo-box" onclick="goHome()" style="cursor:pointer" title="กลับหน้าแรก">🏥</div>
+    <div class="logo-text" onclick="goHome()" style="cursor:pointer" title="กลับหน้าแรก">
       <h1>ระบบแจ้งขอข้อมูล IT</h1>
       <p>รพ.แม่แตง 2026</p>
     </div>
@@ -275,19 +275,43 @@
           <div class="form-group">
             <label class="form-label">แผนก / หน่วยงาน <span class="req">*</span></label>
             <select class="form-select" id="f-dept">
-              <option value="">-- เลือกแผนก --</option>
-              <option>อุบัติเหตุ-ฉุกเฉิน</option><option>ผู้ป่วยใน</option><option>ผู้ป่วยนอก</option>
-              <option>ห้องผ่าตัด</option><option>ห้องคลอด</option><option>ไอซียู</option>
-              <option>รังสีวิทยา</option><option>เภสัชกรรม</option><option>ชันสูตร (Lab)</option>
-              <option>การเงิน</option><option>ทรัพยากรบุคคล</option><option>จัดซื้อ</option>
-              <option>เวชระเบียน</option><option>โภชนาการ</option><option>ธุรการ</option><option>อื่นๆ</option>
+              <option value="">-- เลือกแผนก/หน่วยงาน --</option>
+              <option>กลุ่มการพยาบาล</option>
+              <option>งานอุบัติเหตุฉุกเฉิน</option>
+              <option>งานการพยาบาลผู้คลอดเเละทารกเเรกเกิด</option>
+              <option>งานการพยาบาลผู้ป่วยใน</option>
+              <option>งานผู้ป่วยนอก</option>
+              <option>งานสุขภาพจิตและยาเสพติด</option>
+              <option>งานเปล</option>
+              <option>งานการพยาบาลหน่วยควบคุมการติดเชื้อและงานจ่ายกลาง</option>
+              <option>งานโภชนศาสตร์</option>
+              <option>บริหารงานทั่วไป</option>
+              <option>งานการเงินและบัญชี</option>
+              <option>งานพัสดุ</option>
+              <option>งานธุรการ</option>
+              <option>งานซ่อมบำรุง</option>
+              <option>งานยานพาหนะ</option>
+              <option>งานซักฟอก</option>
+              <option>งานรักษาความปลอดภัย</option>
+              <option>งานภาคสนาม</option>
+              <option>งานรังสี</option>
+              <option>งานเทคนิคการแพทย์</option>
+              <option>งานการแพทย์แผนไทยและการแพทย์ทางเลือก</option>
+              <option>งานแผนยุทธศาสตร์</option>
+              <option>งานเทคโนโลยีสารสนเทศและพัฒนาระบบสุขภาพดิจิทัล</option>
+              <option>งานประกันสุขภาพ</option>
+              <option>งานเวชระเบียนและข้อมูลทางการแพทย์</option>
+              <option>งานส่งเสริม</option>
+              <option>งานเภสัชกรรมชุมชน</option>
+              <option>งานเวชกรรมฟื้นฟู</option>
+              <option>งานทันตสาธารณสุข</option>
+              <option>องค์กรแพทย์</option>
+              <option>งานผู้ป่วยนอก คลีนิก NCD</option>
+              <option>งานควบคุมโรค</option>
             </select>
             <div class="error-msg" id="err-dept">⚠ กรุณาเลือกแผนก</div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Email (รับการแจ้งเตือน)</label>
-            <input class="form-input" id="f-email" type="email" placeholder="your@hospital.com">
-          </div>
+
         </div>
 
         <div class="card">
@@ -450,14 +474,22 @@ let lastSubmittedId = '';
 //  IT ACCOUNTS — แก้ไขชื่อ/รหัสผ่านตามต้องการ
 // ============================================================
 const IT_ACCOUNTS = [
-  { username: 'admin',    password: 'maetaeng2026', name: 'ผู้ดูแลระบบ' },
-  { username: 'it01',     password: 'it01pass',     name: 'เจ้าหน้าที่ IT 1' },
-  { username: 'it02',     password: 'it02pass',     name: 'เจ้าหน้าที่ IT 2' },
-  { username: 'it03',     password: 'it03pass',     name: 'เจ้าหน้าที่ IT 3' },
-  { username: 'it04',     password: 'it04pass',     name: 'เจ้าหน้าที่ IT 4' },
+  { username: 'thitikron.m',  password: 'Mth@1439', name: 'นาย ฐิติกร ใหม่ศรี' },
+  { username: 'yutthasart.k', password: 'Mth@2732', name: 'นาย ยุทธศาสตร์ คุ้มฮิ้น' },
+  { username: 'jakkit.p',     password: 'Mth@7793', name: 'นาย จักรกฤษณ์ พงษ์หล้า' },
+  { username: 'bandid.k',     password: 'Mth@4085', name: 'นาย บัณฑิต ขันวงค์' },
+  { username: 'supatida.j',   password: 'Mth@6753', name: 'น.ส. ศุภธิดา จุมปา' },
 ];
 
 let currentITUser = null; // เก็บ session ใน memory
+
+
+function goHome() {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-user').classList.add('active');
+  document.querySelector('.nav-btn').classList.add('active');
+}
 
 function doLogin() {
   const u = document.getElementById('login-user').value.trim();
@@ -576,7 +608,7 @@ async function submitForm() {
       name: document.getElementById('f-name').value.trim(),
       dept: document.getElementById('f-dept').value,
       phone: document.getElementById('f-phone').value.trim(),
-      email: document.getElementById('f-email').value.trim(),
+      email: '',
       subject: document.getElementById('f-subject').value.trim(),
       detail: document.getElementById('f-detail').value.trim(),
       urgency: selectedUrgency,
@@ -607,7 +639,7 @@ function resetForm() {
   document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
   document.querySelectorAll('.urgency-btn').forEach(b => b.classList.remove('selected'));
   document.querySelector('.urgency-btn.low').classList.add('selected');
-  ['f-name','f-phone','f-email','f-subject','f-detail'].forEach(id => document.getElementById(id).value = '');
+  ['f-name','f-phone','f-subject','f-detail'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('f-dept').value = '';
   document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('show'));
   document.querySelectorAll('.form-input,.form-select,.form-textarea').forEach(e => e.classList.remove('error'));
@@ -760,7 +792,6 @@ function renderDetail() {
         <div class="detail-item"><div class="detail-item-key">👤 ชื่อ</div><div class="detail-item-val">${t.name}</div></div>
         <div class="detail-item"><div class="detail-item-key">🏢 แผนก</div><div class="detail-item-val">${t.dept}</div></div>
         <div class="detail-item"><div class="detail-item-key">📞 เบอร์</div><div class="detail-item-val">${t.phone}</div></div>
-        <div class="detail-item"><div class="detail-item-key">📧 Email</div><div class="detail-item-val">${t.email||'-'}</div></div>
         <div class="detail-item" style="grid-column:span 2"><div class="detail-item-key">⚡ ความเร่งด่วน</div><div class="detail-item-val">${URGENCY[t.urgency]||t.urgency}</div></div>
       </div>
       <div style="font-weight:700;font-size:14px;color:var(--gray-800);margin-bottom:8px">📝 หมายเหตุ / ผลดำเนินการ</div>
