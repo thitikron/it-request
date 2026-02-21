@@ -178,6 +178,10 @@
 
 
   /* ===== LOGIN ===== */
+
+  .delivery-btn{padding:9px 18px;border-radius:9px;border:2px solid var(--gray-200);background:white;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;color:var(--gray-600);cursor:pointer;transition:all .15s}
+  .delivery-btn:hover{border-color:var(--blue);color:var(--blue)}
+  .delivery-btn.selected{border-color:var(--blue);background:var(--blue-light);color:var(--blue-dark)}
   .login-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#1e3a8a,#1e40af);z-index:200;display:flex;align-items:center;justify-content:center}
   .login-box{background:white;border-radius:20px;padding:44px 40px;width:100%;max-width:400px;box-shadow:0 24px 60px rgba(0,0,0,0.3);text-align:center}
   .login-logo{font-size:48px;margin-bottom:8px}
@@ -311,7 +315,18 @@
             </select>
             <div class="error-msg" id="err-dept">⚠ กรุณาเลือกแผนก</div>
           </div>
-
+          <div class="form-group">
+            <label class="form-label">ช่องทางการส่งข้อมูลกลับ <span class="req">*</span></label>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button type="button" class="delivery-btn" onclick="selectDelivery('ส่งผ่านไลน์',this)">💬 ส่งผ่านไลน์</button>
+              <button type="button" class="delivery-btn" onclick="selectDelivery('Flash Drive',this)">💾 Flash Drive</button>
+              <button type="button" class="delivery-btn" onclick="selectDelivery('Email',this)">📧 Email</button>
+              <button type="button" class="delivery-btn" onclick="selectDelivery('อื่นๆ',this)">✏️ อื่นๆ</button>
+            </div>
+            <input class="form-input" id="f-delivery-other" type="text" placeholder="ระบุช่องทางอื่นๆ..."
+              style="margin-top:10px;display:none">
+            <div class="error-msg" id="err-delivery">⚠ กรุณาเลือกช่องทางการส่งข้อมูล</div>
+          </div>
         </div>
 
         <div class="card">
@@ -485,6 +500,19 @@ const IT_ACCOUNTS = [
 let currentITUser = null; // เก็บ session ใน memory
 
 
+
+let selectedDelivery = '';
+
+function selectDelivery(val, el) {
+  document.querySelectorAll('.delivery-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedDelivery = val;
+  const other = document.getElementById('f-delivery-other');
+  if (val === 'อื่นๆ') { other.style.display = 'block'; other.focus(); }
+  else { other.style.display = 'none'; other.value = ''; }
+  document.getElementById('err-delivery').classList.remove('show');
+}
+
 function closeLogin() {
   document.getElementById('login-overlay').style.display = 'none';
   document.getElementById('login-user').value = '';
@@ -587,6 +615,9 @@ function showView(v, btn) {
 // ============================================================
 function selectType(type, el) {
   document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.delivery-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('f-delivery-other').style.display = 'none';
+  document.getElementById('f-delivery-other').value = '';
   el.classList.add('selected');
   selectedType = type;
   document.getElementById('err-type').classList.remove('show');
@@ -598,6 +629,7 @@ function selectUrgency(u, el) {
 }
 function validate() {
   let ok = true;
+  if (!selectedDelivery) { document.getElementById('err-delivery').classList.add('show'); ok = false; }
   [['f-name','err-name'],['f-phone','err-phone'],['f-dept','err-dept'],['f-subject','err-subject'],['f-detail','err-detail']].forEach(([id,eid]) => {
     const el = document.getElementById(id), err = document.getElementById(eid);
     if (!el.value.trim()) { el.classList.add('error'); err.classList.add('show'); ok = false; }
@@ -626,6 +658,7 @@ async function submitForm() {
       subject: document.getElementById('f-subject').value.trim(),
       detail: document.getElementById('f-detail').value.trim(),
       urgency: selectedUrgency,
+      delivery: selectedDelivery === 'อื่นๆ' ? (document.getElementById('f-delivery-other').value.trim() || 'อื่นๆ') : selectedDelivery,
     };
     const res = await apiCall('createTicket', { data });
     hideLoading();
@@ -649,8 +682,11 @@ async function submitForm() {
 }
 
 function resetForm() {
-  selectedType = ''; selectedUrgency = 'low';
+  selectedType = ''; selectedUrgency = 'low'; selectedDelivery = '';
   document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.delivery-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('f-delivery-other').style.display = 'none';
+  document.getElementById('f-delivery-other').value = '';
   document.querySelectorAll('.urgency-btn').forEach(b => b.classList.remove('selected'));
   document.querySelector('.urgency-btn.low').classList.add('selected');
   ['f-name','f-phone','f-subject','f-detail'].forEach(id => document.getElementById(id).value = '');
@@ -708,6 +744,7 @@ async function doTrack() {
         <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
           <span class="type-badge ${tp.cls}">${tp.icon} ${tp.label}</span>
           <span style="background:var(--gray-100);color:var(--gray-600);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600">${URGENCY[t.urgency]||t.urgency}</span>
+        ${t.delivery ? `<span style="background:#f0fdf4;color:#166534;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600">📦 ${t.delivery}</span>` : ''}
         </div>
         <div style="color:var(--gray-600);font-size:14px;line-height:1.8">${t.detail}</div>
         ${t.note ? `<div class="it-note-box" style="margin-top:14px"><div class="it-note-label">💬 หมายเหตุจากทีม IT</div><div class="it-note-text">${t.note}</div></div>` : ''}
@@ -807,6 +844,7 @@ function renderDetail() {
         <div class="detail-item"><div class="detail-item-key">🏢 แผนก</div><div class="detail-item-val">${t.dept}</div></div>
         <div class="detail-item"><div class="detail-item-key">📞 เบอร์</div><div class="detail-item-val">${t.phone}</div></div>
         <div class="detail-item" style="grid-column:span 2"><div class="detail-item-key">⚡ ความเร่งด่วน</div><div class="detail-item-val">${URGENCY[t.urgency]||t.urgency}</div></div>
+        <div class="detail-item" style="grid-column:span 2"><div class="detail-item-key">📦 ช่องทางส่งข้อมูล</div><div class="detail-item-val">${t.delivery||'-'}</div></div>
       </div>
       <div style="font-weight:700;font-size:14px;color:var(--gray-800);margin-bottom:8px">📝 หมายเหตุ / ผลดำเนินการ</div>
       <textarea class="note-area" id="admin-note" placeholder="เช่น กำลังดำเนินการ, ส่ง email แล้ว...">${t.note||''}</textarea>
